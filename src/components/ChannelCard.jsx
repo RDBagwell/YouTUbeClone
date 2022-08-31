@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { Typography, Box, CardContent, CardMedia } from '@mui/material';
 import { CheckCircle } from '@mui/icons-material';
 import { demoProfilePicture } from '../utils/constants';
-import { height } from '@mui/system';
 
 const ChannelCard = ({channelDetail, marginTop}) => (
     <Box sx={{
