@@ -9,11 +9,16 @@ import { fetchFromApi } from '../utils/fetchFromApi';
 
 const VideoDetail = () => {
   const { id } = useParams();
-  const [videoDetails, setVideoDetails] = useState(null)
+  const [videoDetails, setVideoDetails] = useState(null);
+  const [relatedVideo, setRelatedVideo] = useState([]);
 
   useEffect(()=>{
-    fetchFromApi(`videos?params=snippet,statistics&id=${id}`).then((data)=>{
+    fetchFromApi(`videos?part=snippet,statistics&id=${id}`).then((data)=>{
       setVideoDetails(data.items[0])
+    });
+
+    fetchFromApi(`search?part=snippet&relatedToVideoId=${id}&type=video`).then((data)=>{
+      setRelatedVideo(data.items)
     })
   }, [id]);
 
@@ -40,14 +45,27 @@ const VideoDetail = () => {
             px={2}
             >
             <Link to={`/channel/${channelId}`}>
-              <Typography>
+              <Typography variant={{ sm: "subtitle1", md: 'h6' }}  color="#fff" >
                 {channelTitle}
+                <CheckCircle sx={{ fontSize: "12px", color: "gray", ml: "5px" }} />
               </Typography>
             </Link>
+            <Stack direction="row" gap="20px" alignItems="center">
+              <Typography variant="body1" sx={{ opacity: 0.7 }}>
+                {parseInt(viewCount).toLocaleString()} views
+              </Typography>
+              <Typography variant="body1" sx={{ opacity: 0.7 }}>
+                {parseInt(likeCount).toLocaleString()} likes
+              </Typography>
+            </Stack>
             </Stack>
           </Box>
         </Box>
+        <Box px={2} py={{ md: 1, xs: 5 }} justifyContent="center" alignItems="center" >
+          <Videos Videos={relatedVideo} direction="column" />
+      </Box>
       </Stack>
+
     </Box>
   )
 }
